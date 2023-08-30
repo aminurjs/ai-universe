@@ -32,12 +32,11 @@ const setAiList = (aiList, isSeeMore) =>{
                         <h4 class="card-title text-[#111] font-semibold">${aiTool.name}</h4>
                         <p class="text-base text-[#585858]"><img class="inline w-5" src="./icon/calender.svg" alt=""> ${aiTool.published_in}</p>
                     </div>
-                    <button onclick="modal(${aiTool.id})" class="btn rounded-full p-2.5 mr-3"><img src="./icon/arrow.svg" alt=""></button>
+                    <button onclick="modal('${aiTool.id}')" class="btn rounded-full p-2.5 mr-3"><img src="./icon/arrow.svg" alt=""></button>
                 </div>
             </div>
         `;
         aiContainer.appendChild(div);
-        console.log(aiTool)
     });
     loading(false);
 }
@@ -57,47 +56,47 @@ const loading = (isLoading) =>{
     }
 }
 const modal = async (id) =>{
-    console.log(id);
-    const res = await fetch(`https://openapi.programming-hero.com/api/ai/tool/01`);
+    const res = await fetch(`https://openapi.programming-hero.com/api/ai/tool/${id}`);
     const data = await res.json();
     const aiData = data.data;
     setAiData(aiData);
 }
 const setAiData = aiData =>{
     const modalContainer = document.getElementById('modal');
+    modalContainer.textContent= '';
     const div = document.createElement('div');
     div.innerHTML = `
         <div class="p-5 flex gap-5 flex-col-reverse lg:flex-row">
             <div class="bg-[#EB57570D] p-6 rounded-lg mb-8 lg:mb-0">
                 <h3 class="text-lg text-left text-[#111] font-semibold mb-4">${aiData.description}</h3>
-                <div class="flex justify-between mb-5">
-                    <div class="p-3 px-6 bg-white rounded-lg"><h4 class="text-base text-center text-green-500 font-medium">$10/<br>month<br>Basic</h4></div>
-                    <div class="p-3 px-6 bg-white rounded-lg"><h4 class="text-base text-center text-orange-500 font-medium">$50/<br>month<br>pro</h4></div>
-                    <div class="p-3 px-6 bg-white rounded-lg"><h4 class="text-base text-center text-rose-500 font-medium">Contact<br>us<br>Enterprise</h4></div>
+                <div class="flex justify-between mb-5 gap-4">
+                    <div class="p-3 px-3 bg-white rounded-lg"><h4 class="text-base text-center text-green-500 font-medium">${aiData.pricing[0]?.price}<br>${aiData.pricing[0]?.plan}</h4></div>
+                    <div class="p-3 px-3 bg-white rounded-lg"><h4 class="text-base text-center text-orange-500 font-medium">${aiData.pricing[1]?.price}<br>${aiData.pricing[1]?.plan}</div>
+                    <div class="p-3 px-3 bg-white rounded-lg"><h4 class="text-base text-center text-rose-500 font-medium">Contact us<br>${aiData.pricing[1]?.plan}</h4></div>
                 </div>
-                <div class="flex gap-4">
+                <div class="flex gap-5">
                     <div class="">
                         <h2 class="text-lg text-left text-[#111] font-semibold">Features</h2>
                         <ul class="text-left text-sm list-disc list-inside">
-                            <li>Contextual understanding</li>
-                            <li>Multi-platform support</li>
-                            <li>Voice recognition</li>
+                            <li>${aiData.features[1]?.feature_name}</li>
+                            <li>${aiData.features[2]?.feature_name}</li>
+                            <li>${aiData.features[3]?.feature_name}</li>
                         </ul>
                     </div>
                     <div class="">
-                        <h2 class="text-lg text-[#111] font-semibold">Integrations</h2>
+                        <h2 class="text-lg text-[#111] font-semibold text-left">Integrations</h2>
                         <ul class="text-left text-sm list-disc list-inside">
-                            <li>FB Messenger</li>
-                            <li>Slack</li>
-                            <li>Telegram</li>
+                        <li>${aiData.integrations[0]}</li>
+                        <li>${aiData.integrations[1]}</li>
+                        <li>${aiData.integrations[2]}</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="p-6 rounded-lg">
-                <img class="rounded-lg mb-5" src="./1.jpeg" alt="">
-                <h2 class="text-2xl text-[#111] font-semibold mb-5">Hi, how are you doing today?</h2>
-                <p class="text-base text-[#585858]">I'm doing well, thank you for asking. How can I assist you today?</p>
+                <img class="rounded-lg mb-5" src="${aiData.image_link[0]}" alt="">
+                <h2 class="text-2xl text-[#111] font-semibold mb-5">${aiData.input_output_examples[0]?.input}</h2>
+                <p class="text-base text-[#585858]">${aiData.input_output_examples[0]?.output}</p>
             </div>
         </div>
     `;
